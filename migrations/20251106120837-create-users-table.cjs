@@ -63,7 +63,7 @@ module.exports = {
         allowNull: false,
       },
       service_icon: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(255),
         allowNull: true,
       },
       service_tariff: {

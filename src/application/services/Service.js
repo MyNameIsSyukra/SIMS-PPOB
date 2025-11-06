@@ -1,9 +1,9 @@
-import BannerRepository from '../../infrastructure/repositories/Banner.js';
 import { AppError } from '../../../utils/Error.js';
+import ServiceRepository from '../../infrastructure/repositories/Service.js';
 
-export default class BannerService {
+export default class ServiceService {
   constructor() {
-    this.repository = new BannerRepository();
+    this.repository = new ServiceRepository();
   }
 
   async save(data) {
@@ -14,7 +14,7 @@ export default class BannerService {
       throw new AppError(error.message, error.statusCode || 400);
     }
   }
-  async load(data) {
+  async load() {
     try {
       const result = await this.repository.load();
       return result;

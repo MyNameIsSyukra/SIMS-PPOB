@@ -1,18 +1,18 @@
 import response from '../../../utils/Response.js';
 import { AppError } from '../../../utils/Error.js';
-import { BannerDTO } from '../../application/dto/Banner.js';
-import BannerService from '../../application/services/Banner.js';
+import { ServiceDTO } from '../../application/dto/Service.js';
+import ServiceService from '../../application/services/Service.js';
 
-export default class BannerController {
+export default class ServiceController {
   constructor() {
-    this.service = new BannerService();
+    this.service = new ServiceService();
   }
 
   async save(req, res) {
     try {
-      const data = BannerDTO.SaveBanner.parse(req.body);
+      const data = ServiceDTO.SaveService.parse(req.body);
       await this.service.save(data);
-      return response(res, 201, 'Save Banner Succesfully', null);
+      return response(res, 201, 'Save Service Succesfully', null);
     } catch (error) {
       console.error(error);
       if (error.name === 'ZodError') {
@@ -29,7 +29,7 @@ export default class BannerController {
   }
   async load(req, res) {
     try {
-      return response(res, 200, 'Load Banner Succesfully', await this.service.load());
+      return response(res, 200, 'Load Service Succesfully', await this.service.load());
     } catch (error) {
       console.error(error);
       if (error.name === 'ZodError') {
