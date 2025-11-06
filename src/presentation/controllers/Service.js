@@ -14,7 +14,6 @@ export default class ServiceController {
       await this.service.save(data);
       return response(res, 201, 'Save Service Succesfully', null);
     } catch (error) {
-      console.error(error);
       if (error.name === 'ZodError') {
         const zodErr = AppError.handleZodError(error);
         return response(res, zodErr.statusCode, zodErr.message, null);

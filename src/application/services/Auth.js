@@ -51,8 +51,7 @@ export default class AuthService {
         first_name: user.first_name,
         email: user.email,
       };
-
-      // Generate tokens
+      //  Generate tokens
       const accessToken = await this.jwtService.createAccessToken(payload);
 
       return {

@@ -48,14 +48,10 @@ module.exports = {
 
     // Service Table
     await queryInterface.createTable('Services', {
-      service_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
       service_code: {
         type: Sequelize.STRING(30),
+        primaryKey: true,
+        unique: true,
         allowNull: false,
       },
       service_name: {
@@ -68,7 +64,7 @@ module.exports = {
       },
       service_tariff: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -89,12 +85,12 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
       },
-      service_code: {
+      transaction_type: {
         type: Sequelize.STRING(30),
         allowNull: false,
       },
-      service_name: {
-        type: Sequelize.STRING(30),
+      description: {
+        type: Sequelize.STRING(255),
         allowNull: false,
       },
       total_amount: {
@@ -107,21 +103,11 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       user_user_id: {
-        type: Sequelize.STRING(30),
+        type: Sequelize.STRING(255),
         allowNull: false,
         references: {
           model: 'Users',
           key: 'user_id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      service_service_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Services',
-          key: 'service_id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
