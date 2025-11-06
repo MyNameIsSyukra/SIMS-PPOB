@@ -1,7 +1,7 @@
 import Connection from '../../../frameworks/database/postgres/connection.js';
 import { AppError } from '../../../utils/Error.js';
 
-export default class PasienRepository {
+export default class BannerRepository {
   constructor() {
     this.sequelize = Connection.sequelize;
   }
@@ -10,10 +10,10 @@ export default class PasienRepository {
     const t = await this.sequelize.transaction();
     try {
       let sqlQuery = `
-        INSERT INTO pasien (
-          id_pasien, nama)
+        INSERT INTO public."Banners" (
+          banner_name, banner_image, description)
         VALUES (
-          :id_pasien, :nama)
+          :banner_name, :banner_image, :description)
       `;
       await this.sequelize.query(sqlQuery, {
         replacements: data,
@@ -23,7 +23,8 @@ export default class PasienRepository {
       return true;
     } catch (error) {
       await t.rollback();
-      throw AppError('Gagal menyimpan data pasien', 500);
+      console.error(error);
+      throw new AppError('Gagal menyimpan data Banner', 500);
     }
   }
 }

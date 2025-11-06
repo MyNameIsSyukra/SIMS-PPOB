@@ -146,6 +146,10 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      banner_name: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+      },
       banner_image: {
         type: Sequelize.STRING(255),
         allowNull: false,
