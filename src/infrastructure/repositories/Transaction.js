@@ -29,27 +29,6 @@ export default class TransationRepository {
     }
   }
 
-  async updateBalance(data) {
-    console.log(data);
-    const t = await this.sequelize.transaction();
-    try {
-      let sqlQuery = `
-        UPDATE public."Users" SET balance = :saldoSisa 
-        WHERE user_id = :user_id;
-      `;
-      await this.sequelize.query(sqlQuery, {
-        replacements: data,
-        transaction: t,
-      });
-      await t.commit();
-      return true;
-    } catch (error) {
-      await t.rollback();
-      console.error(error);
-      throw new AppError('Gagal menyimpan data service', 500);
-    }
-  }
-
   async loadAll() {
     try {
       let sqlQuery = `

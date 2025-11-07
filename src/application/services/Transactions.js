@@ -17,9 +17,9 @@ export default class TransationTransation {
       const userDatas = await this.userRepository.findByUserId(data.user_id);
       const userBalance = userDatas.balance == undefined ? 0 : userDatas.balance;
       const saldoSisa = Number(userBalance) + Number(data.amount);
-      await this.repository.updateBalance({
+      await this.userRepository.updateProfileDatas({
         user_id: userDatas.user_id,
-        saldoSisa: saldoSisa,
+        balance: saldoSisa,
       });
       await this.repository.save({
         invoice_number: this.commonUtils.generateInvoiceNumber(),
@@ -47,9 +47,9 @@ export default class TransationTransation {
       if (saldoSisa < 0) {
         throw new AppError('saldo tidak mencukupi');
       }
-      await this.repository.updateBalance({
+      await this.userRepository.updateProfileDatas({
         user_id: userDatas.user_id,
-        saldoSisa: saldoSisa,
+        balance: saldoSisa,
       });
       const saveDatas = {
         invoice_number: this.commonUtils.generateInvoiceNumber(),

@@ -27,4 +27,28 @@ export default class UserRepository {
       throw new AppError(error.message, 500);
     }
   }
+
+  async updateProfileDatas(data) {
+    const t = await this.sequelize.transaction();
+    try {
+      const fields = Object.keys(data)
+        .map(key => `${key} = :${key}`)
+        .join(', ');
+      let sqlQuery = `
+        UPDATE public."Users" SET ${fields} 
+        WHERE user_id = :user_id
+        RETURNING *;
+      `;
+      const [res] = await this.sequelize.query(sqlQuery, {
+        replacements: data,
+        transaction: t,
+      });
+      await t.commit();
+      return res;
+    } catch (error) {
+      await t.rollback();
+      console.error(error);
+      throw new AppError('Gagal menyimpan data service', 500);
+    }
+  }
 }
