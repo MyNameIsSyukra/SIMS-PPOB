@@ -27,21 +27,56 @@ export default class TransactionController {
       return response(res, 500, 'Internal Server Error', null);
     }
   }
-  // async load(req, res) {
-  //   try {
-  //     return response(res, 200, 'Load Transaction Succesfully', await this.service.load());
-  //   } catch (error) {
-  //     console.error(error);
-  //     if (error.name === 'ZodError') {
-  //       const zodErr = AppError.handleZodError(error);
-  //       return response(res, zodErr.statusCode, zodErr.message, null);
-  //     }
+  async transaction(req, res) {
+    try {
+      const data = TransactionDTO.Trasaction.parse(req.body);
+      data.user_id = req.user.user_id;
 
-  //     if (error instanceof AppError) {
-  //       return response(res, error.statusCode, error.message, null);
-  //     }
+      return response(res, 201, 'Save Transaction Succesfully', await this.service.topup(data));
+    } catch (error) {
+      if (error.name === 'ZodError') {
+        const zodErr = AppError.handleZodError(error);
+        return response(res, zodErr.statusCode, zodErr.message, null);
+      }
 
-  //     return response(res, 500, 'Internal Server Error', null);
-  //   }
-  // }
+      if (error instanceof AppError) {
+        return response(res, error.statusCode, error.message, null);
+      }
+
+      return response(res, 500, 'Internal Server Error', null);
+    }
+  }
+  async getAllTransaction(req, res) {
+    try {
+      return response(res, 200, 'Save Transaction Succesfully', await this.service.loadAll());
+    } catch (error) {
+      if (error.name === 'ZodError') {
+        const zodErr = AppError.handleZodError(error);
+        return response(res, zodErr.statusCode, zodErr.message, null);
+      }
+
+      if (error instanceof AppError) {
+        return response(res, error.statusCode, error.message, null);
+      }
+
+      return response(res, 500, 'Internal Server Error', null);
+    }
+  }
+  async getAllTransactionByUserID(req, res) {
+    try {
+      const user_id = req.user.user_id;
+      return response(res, 200, 'Save Transaction Succesfully', await this.service.loadTransactionByUserId(user_id));
+    } catch (error) {
+      if (error.name === 'ZodError') {
+        const zodErr = AppError.handleZodError(error);
+        return response(res, zodErr.statusCode, zodErr.message, null);
+      }
+
+      if (error instanceof AppError) {
+        return response(res, error.statusCode, error.message, null);
+      }
+
+      return response(res, 500, 'Internal Server Error', null);
+    }
+  }
 }

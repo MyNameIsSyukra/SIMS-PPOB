@@ -35,35 +35,54 @@ export default class TransationTransation {
       throw new AppError(error.message, error.statusCode || 400);
     }
   }
-  // async topup(data) {
-  //   try {
-  //     const serviceDatas = await this.serviceRepository.loadByCode(data.service_code);
-  //     if (service_code.length === 0) {
-  //       throw new AppError('service tidak ditemukan', 400);
-  //     }
-  //     const userDatas = await this.userRepository.findByUserId(data.user_id);
-  //     const saldoSisa = userDatas.balance + data.amount;
-  //     if (saldoSisa < 0) {
-  //       throw new AppError('saldo tidak mencukupi');
-  //     }
-  //     await this.repository.updateBalance({
-  //       user_id: userDatas.user_id,
-  //       saldoSisa: saldoSisa,
-  //     });
-  //     await this.repository.save({
-  //       invoice_number : this.commonUtils.generateInvoiceNumber(),
-  //       transaction_type :"TOPUP",
-  //       description : "Top Up Balance"
-  //       total_amount:
-  //     })
-  //     return result;
-  //   } catch (error) {
-  //     throw new AppError(error.message, error.statusCode || 400);
-  //   }
-  // }
-  async load() {
+
+  async transaction(data) {
     try {
-      const result = await this.repository.load();
+      const serviceDatas = await this.serviceRepository.loadByCode(data.service_code);
+      if (serviceDatas.length === 0) {
+        throw new AppError('service tidak ditemukan', 400);
+      }
+      const userDatas = await this.userRepository.findByUserId(data.user_id);
+      const saldoSisa = Number(userDatas.balance) - Number(serviceDatas[0].service_tariff);
+      if (saldoSisa < 0) {
+        throw new AppError('saldo tidak mencukupi');
+      }
+      await this.repository.updateBalance({
+        user_id: userDatas.user_id,
+        saldoSisa: saldoSisa,
+      });
+      const saveDatas = {
+        invoice_number: this.commonUtils.generateInvoiceNumber(),
+        transaction_type: 'Payment',
+        description: serviceDatas[0].service_name,
+        total_amount: saldoSisa,
+        user_id: userDatas.user_id,
+      };
+      const [res] = await this.repository.save(saveDatas);
+      return {
+        invoice_number: saveDatas.invoice_number,
+        service_code: serviceDatas[0].service_code,
+        service_name: serviceDatas[0].service_name,
+        transaction_type: 'PAYMENT',
+        total_amount: serviceDatas[0].service_tariff,
+        created_on: res.createdAt,
+      };
+    } catch (error) {
+      throw new AppError(error.message, error.statusCode || 400);
+    }
+  }
+
+  async loadAll() {
+    try {
+      const result = await this.repository.loadAll();
+      return result;
+    } catch (error) {
+      throw new AppError(error.message, error.statusCode || 400);
+    }
+  }
+  async loadTransactionByUserId(user_id) {
+    try {
+      const result = await this.repository.loadTransactionByUserId(user_id);
       return result;
     } catch (error) {
       throw new AppError(error.message, error.statusCode || 400);

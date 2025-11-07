@@ -14,13 +14,14 @@ export default class TransationRepository {
           invoice_number, transaction_type, description, total_amount,user_user_id)
         VALUES (
           :invoice_number, :transaction_type, :description, :total_amount, :user_id)
+        RETURNING *;
       `;
-      await this.sequelize.query(sqlQuery, {
+      const [res] = await this.sequelize.query(sqlQuery, {
         replacements: data,
         transaction: t,
       });
       await t.commit();
-      return true;
+      return res;
     } catch (error) {
       await t.rollback();
       console.error(error);
@@ -29,6 +30,7 @@ export default class TransationRepository {
   }
 
   async updateBalance(data) {
+    console.log(data);
     const t = await this.sequelize.transaction();
     try {
       let sqlQuery = `
@@ -48,7 +50,20 @@ export default class TransationRepository {
     }
   }
 
-  async load() {
+  async loadAll() {
+    try {
+      let sqlQuery = `
+        SELECT * FROM public."Transactions"
+      `;
+      return await this.sequelize.query(sqlQuery, {
+        type: this.sequelize.QueryTypes.SELECT,
+      });
+    } catch (error) {
+      console.error(error);
+      throw new AppError('Gagal mengambil data service', 500);
+    }
+  }
+  async loadTransactionByUserId(user_id) {
     try {
       let sqlQuery = `
         SELECT * FROM public."Transactions"

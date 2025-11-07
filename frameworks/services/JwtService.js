@@ -38,7 +38,6 @@ export default class JWTService {
   async verifyAccessToken(token) {
     try {
       const decoded = jwt.verify(token, this.accessTokenSecret);
-      console.log(decoded);
       if (decoded.type !== 'access') {
         throw new AppError('Invalid token type', 401);
       }
