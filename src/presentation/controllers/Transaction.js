@@ -32,7 +32,7 @@ export default class TransactionController {
       const data = TransactionDTO.Trasaction.parse(req.body);
       data.user_id = req.user.user_id;
 
-      return response(res, 201, 'Save Transaction Succesfully', await this.service.topup(data));
+      return response(res, 201, 'Save Transaction Succesfully', await this.service.transaction(data));
     } catch (error) {
       if (error.name === 'ZodError') {
         const zodErr = AppError.handleZodError(error);

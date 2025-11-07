@@ -70,7 +70,7 @@ export default class UserController {
       }
       const datas = {
         user_id: req.user.user_id,
-        profile_image: `${config.baseUrl}uploads/` + req.file.filename,
+        profile_image: `${config.baseUrl}static/` + req.file.filename,
       };
       return response(res, 200, 'Load Banner Succesfully', await this.service.updateProfile(datas));
     } catch (error) {
