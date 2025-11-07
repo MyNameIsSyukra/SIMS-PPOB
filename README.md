@@ -8,7 +8,7 @@
 - **List Banner dan Service**
 - **Error Handling dan Validasi Input**
 - **Implementasi Raw Query**
-- **Postman API Documentation** 
+- **Postman API Documentation**  https://documenter.getpostman.com/view/47337986/2sB3WsPepn
 
 ---
 
