@@ -8,6 +8,7 @@ export default {
   postgres: process.env.POSTGRES, // Connection string format
   jwtSecret: process.env.JWT_SECRET,
   salt: Number(process.env.SALT),
+  baseUrl: process.env.BASEURL,
 
   // ✅ ADDED: Additional useful config
   env: process.env.NODE_ENV || 'development',

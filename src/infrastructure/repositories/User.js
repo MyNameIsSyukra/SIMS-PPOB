@@ -44,7 +44,12 @@ export default class UserRepository {
         transaction: t,
       });
       await t.commit();
-      return res;
+      return {
+        email: res[0].email,
+        first_name: res[0].first_name,
+        last_name: res[0].last_name,
+        profile_image: res[0].profile_image,
+      };
     } catch (error) {
       await t.rollback();
       console.error(error);

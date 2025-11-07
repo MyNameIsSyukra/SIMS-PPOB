@@ -2,6 +2,7 @@ import response from '../../../utils/Response.js';
 import { AppError } from '../../../utils/Error.js';
 import UserService from '../../application/services/User.js';
 import { UserDTO } from '../../application/dto/User.js';
+import config from '../../../config/config.js';
 
 export default class UserController {
   constructor() {
@@ -64,8 +65,13 @@ export default class UserController {
   }
   async uploadImage(req, res) {
     try {
-      const datas = UserDTO.UpdateUser.parse(req.body);
-      datas.user_id = req.user.user_id;
+      if (!req.file) {
+        throw new AppError('Tidak ada file ditemukan', 400);
+      }
+      const datas = {
+        user_id: req.user.user_id,
+        profile_image: `${config.baseUrl}uploads/` + req.file.filename,
+      };
       return response(res, 200, 'Load Banner Succesfully', await this.service.updateProfile(datas));
     } catch (error) {
       console.error(error);

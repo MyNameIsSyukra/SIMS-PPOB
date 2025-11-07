@@ -33,6 +33,9 @@ export default class UserService {
   async updateProfile(data) {
     try {
       const result = await this.repository.findByUserId(data.user_id);
+      if (result == undefined) {
+        throw new AppError('User Not Found', 400);
+      }
       const updated = await this.repository.updateProfileDatas(data);
       return updated;
     } catch (error) {

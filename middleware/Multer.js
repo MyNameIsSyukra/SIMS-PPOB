@@ -2,6 +2,7 @@
 import multer from 'multer';
 import fs from 'node:fs';
 import path from 'node:path';
+import { AppError } from '../utils/Error.js';
 
 const uploadPath = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads');
 
@@ -23,8 +24,9 @@ export class MulterMiddleware {
 
     // Filter untuk hanya menerima PDF
     this.fileFilter = (req, file, cb) => {
-      if (file.mimetype !== 'application/pdf') {
-        cb(new Error('Silahkan mengupload file dengan format PDF!'), false);
+      const allowedTypes = ['image/jpeg', 'image/jpg']; // keduanya diterima
+      if (!allowedTypes.includes(file.mimetype)) {
+        cb(new AppError('Silahkan mengupload file dengan format JPG atau JPEG!', 400), false);
       } else {
         cb(null, true);
       }
